@@ -21,13 +21,20 @@
 ## Шаги для запуска
 1. Сборка докер образов
 
-   Вообще докер-образы собраны и залиты на мой dockerhub, но их можно собрать вручную
+   Вообще докер-образы собраны и залиты на мой DockerHub, но их можно собрать вручную
    ~~~
    docker build -t <your_repo>/my_backend:latest .\backend\
    docker build -t <your_repo>/my_frontend:latest .\frontend\
    ~~~
-   Тогда необходимо сменить параметр images в backend-deployment.yaml и frontend-deployment.yaml \
-   на <your_repo>/my_backend:latest и <your_repo>/my_frontend:latest соответственно
+   После чего надо залить их на DockerHub
+   ~~~
+   docker push <your_repo>/my_backend:latest
+   docker push <your_repo>/my_frontend:latest
+   ~~~
+   И сменить параметр image в deployment файлах:
+   ~~~
+   image: <your_repo>/my_backend:latest в backend-deployment.yaml
+   image: <your_repo>/my_frontend:latest в frontend-deployment.yaml
 
 2. Запускаем minikube
 
@@ -42,7 +49,7 @@
     kubectl apply -f frontend-deployment.yaml \
     kubectl apply -f frontend-service.yaml
 
-4. Дожидаемся пока все контейнеры будут иметь статус Running
+4. Дожидаемся пока все поды будут иметь статус Running
 
     ~~~
    kubectl get pods
@@ -64,6 +71,9 @@
     ~~~
    {"backend_response":{"response":"Backend recieved: Hello backend!"},
      "frontend_response":"Frontend successfully forwarded"}
+   ~~~
+   Мы видим, что фронтенд получил наше сообщение, переслал его в бекенд, \
+   а тот его получил, и отправил ответ.
     
 ## Удаление
 Чтобы удалить все ресурсы: 
