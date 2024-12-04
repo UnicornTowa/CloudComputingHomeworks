@@ -18,13 +18,23 @@
 Поэтому пришлось переделывать на VirtualBox и тогда все заработало \
 Еще при запуске minikube пришлось прописывать опцию --no-vtx-check т.к. он жаловался на то что виртуализация недоступна, хотя на самом деле она доступна.
 
-## Шаги для запуска 
-1. Запускаем minikube
+## Шаги для запуска
+1. Сборка докер образов
+
+   Вообще докер-образы собраны и залиты на мой dockerhub, но их можно собрать вручную
+   ~~~
+   docker build -t <your_repo>/my_backend:latest .\backend\
+   docker build -t <your_repo>/my_frontend:latest .\frontend\
+   ~~~
+   Тогда необходимо сменить параметр images в backend-deployment.yaml и frontend-deployment.yaml \
+   на <your_repo>/my_backend:latest и <your_repo>/my_frontend:latest соответственно
+
+2. Запускаем minikube
 
     ~~~
    minikube start --driver=virtualbox --no-vtx-check
 
-2. Применяем наши конфигурации
+3. Применяем наши конфигурации
    
     ~~~
    kubectl apply -f backend-deployment.yaml \
@@ -32,24 +42,24 @@
     kubectl apply -f frontend-deployment.yaml \
     kubectl apply -f frontend-service.yaml
 
-3. Дожидаемся пока все контейнеры будут иметь статус Running
+4. Дожидаемся пока все контейнеры будут иметь статус Running
 
     ~~~
    kubectl get pods
 
-4. Получаем node-ip. (internal-ip из следующей команды)
+5. Получаем node-ip. (internal-ip из следующей команды)
    
     ~~~
    kubectl get nodes -o wide -n minikube
  
-5. Обращаемся к фронтенду по адресу node-ip:30000 
+6. Обращаемся к фронтенду по адресу node-ip:30000 
    
     ~~~
    Invoke-WebRequest -Uri http://<node-ip>:30000 -Method POST 
                       -Headers @{ "Content-Type" = "application/json" }
                       -Body '{"message": "Hello backend!"}'
 
-6. Получаем ответ и убеждаемся, что все корректно работает
+7. Получаем ответ и убеждаемся, что все корректно работает
 
     ~~~
    {"backend_response":{"response":"Backend recieved: Hello backend!"},
