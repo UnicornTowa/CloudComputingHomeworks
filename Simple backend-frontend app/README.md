@@ -21,40 +21,46 @@
 ## Шаги для запуска 
 1. Запускаем minikube
 
-    minikube start --driver=virtualbox --no-vtx-check
+    ~~~
+   minikube start --driver=virtualbox --no-vtx-check
 
 2. Применяем наши конфигурации
    
-    kubectl apply -f backend-deployment.yaml
-    kubectl apply -f backend-service.yaml
-    kubectl apply -f frontend-deployment.yaml
+    ~~~
+   kubectl apply -f backend-deployment.yaml \
+    kubectl apply -f backend-service.yaml \
+    kubectl apply -f frontend-deployment.yaml \
     kubectl apply -f frontend-service.yaml
 
 3. Дожидаемся пока все контейнеры будут иметь статус Running
 
-    kubectl get pods
+    ~~~
+   kubectl get pods
 
 4. Получаем node-ip. (internal-ip из следующей команды)
    
-    kubectl get nodes -o wide -n minikube
-    
+    ~~~
+   kubectl get nodes -o wide -n minikube
+ 
 5. Обращаемся к фронтенду по адресу node-ip:30000 
    
-    Invoke-WebRequest -Uri http://<node-ip>:30000 -Method POST 
+    ~~~
+   Invoke-WebRequest -Uri http://<node-ip>:30000 -Method POST 
                       -Headers @{ "Content-Type" = "application/json" }
                       -Body '{"message": "Hello backend!"}'
 
 6. Получаем ответ и убеждаемся, что все корректно работает
 
-    {"backend_response":{"response":"Backend recieved: Hello backend!"},
+    ~~~
+   {"backend_response":{"response":"Backend recieved: Hello backend!"},
      "frontend_response":"Frontend successfully forwarded"}
     
 ## Удаление
-Чтобы удалить все ресурсы:
-`bash
-kubectl delete -f backend-deployment.yaml
-kubectl delete -f backend-service.yaml
-kubectl delete -f frontend-deployment.yaml
-kubectl delete -f frontend-service.yaml
+Чтобы удалить все ресурсы: 
+
+    kubectl delete -f backend-deployment.yaml
+    kubectl delete -f backend-service.yaml
+    kubectl delete -f frontend-deployment.yaml
+    kubectl delete -f frontend-service.yaml
 
 ...или просто minikube delete если там больше ничего нет
