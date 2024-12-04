@@ -34,11 +34,11 @@
 
     kubectl get pods
 
-4. Получаем <node-ip>. (internal-ip из следующей команды)
+4. Получаем node-ip. (internal-ip из следующей команды)
    
     kubectl get nodes -o wide -n minikube
     
-5. Обращаемся к фронтенду по адресу <node-ip>:30000 
+5. Обращаемся к фронтенду по адресу node-ip:30000 
    
     Invoke-WebRequest -Uri http://<node-ip>:30000 -Method POST 
                       -Headers @{ "Content-Type" = "application/json" }
